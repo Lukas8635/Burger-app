@@ -7,6 +7,7 @@
   
   .BuildControl button {
     display: block;
+    align-items: center;
     font: inherit;
     padding: 5px 20px;
     margin: 0 5px;

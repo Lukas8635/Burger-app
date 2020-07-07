@@ -20,7 +20,7 @@ const burger = (props:BurgerInterface) => {
             return arr.concat(el)
         }, []);
     if(transformIngredients.length === 0){
-        transformIngredients = [<p>Please start adding ingredients!</p>];
+        transformIngredients = [<p key={1}>Please start adding ingredients!</p>];
 
     }
     console.log(transformIngredients);
