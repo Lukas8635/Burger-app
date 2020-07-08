@@ -14,8 +14,8 @@ export interface ModalInterface {
 }
 
 class Modal extends Component<ModalInterface>{
-    shouldComponentUpdate (nextProps: { show: boolean | undefined; }, nextState: any){
-            return nextProps.show !== this.props.show;
+    shouldComponentUpdate (nextProps: {children: boolean, show: boolean | undefined; }, nextState: any){
+            return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
     }
     
     componentDidUpdate (){
