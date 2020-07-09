@@ -3,7 +3,18 @@ import Aux from '../../../hoc/Auxiliary/Auxiliary';
 import {BurgerType} from '../../../containers/BurgerBuilder/BurgerBuilder';
 import Button from '../../UI/Button/Button';
 
-class OrderSummary extends Component<BurgerType>{
+interface OrderSummaryInterface {
+    ingredients: { [index: string]: number };
+    purchaseCancelled: (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => void;
+    purchaseContinued: (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => void;
+    price: number;
+}
+
+class OrderSummary extends Component<OrderSummaryInterface>{
     componentDidUpdate () {
         console.log('[OrderSummary] WillUpdate')
     }

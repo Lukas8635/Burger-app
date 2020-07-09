@@ -1,15 +1,17 @@
 import React from 'react';
 
+
 import classes from './Burger.module.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
-import {AuxBurgerIngredienceInterface} from '../../containers/BurgerBuilder/BurgerBuilder'
+import {BurgerType} from '../../containers/BurgerBuilder/BurgerBuilder'
 
-interface BurgerInterface {
-    ingredients: AuxBurgerIngredienceInterface;
+export interface BurgerInterface {
+    ingredients: BurgerType ;
     
 }
 
 const burger = (props:BurgerInterface) => {
+    console.log(props);
     let transformIngredients = Object.keys(props.ingredients)
     .map(ingredientKey =>{
         return [...Array(props.ingredients[ingredientKey])].map((_, i) => {
@@ -33,4 +35,4 @@ const burger = (props:BurgerInterface) => {
     );
 };  
 
-export default burger; 
+export default  burger ; 

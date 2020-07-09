@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 import classes from './BuildControls.module.css';
 import BuildControl from './BuildControl/BuildControl';
 
@@ -8,11 +6,14 @@ import BuildControl from './BuildControl/BuildControl';
 
 interface BuildControlsInterface{
     ordered: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    ingredientAdded(type: string): void;
-    ingredientRemoved(type:string):void;
-    disabled: any;
-    price:number; 
-    purchasable?:boolean;
+    ingredientAdded: Function;
+    ingredientRemoved: Function;
+    disabled: { [key: string]: number | boolean }
+    price: number; 
+    purchasable: boolean;
+    key?: string;
+    label?: string;
+    type?: string;
     
     
 
@@ -33,10 +34,9 @@ const buildControls = (props:BuildControlsInterface) => (
             <BuildControl 
             key ={ctrl.label} 
             label={ctrl.label}
-           
             added={() => props.ingredientAdded(ctrl.type)}
             removed={() => props.ingredientRemoved(ctrl.type)}
-            disabled ={props.disabled[ctrl.type]}/>
+            disabled={props.disabled[ctrl.type]}/>
         ))}
         <button 
             className={classes.OrderButton}

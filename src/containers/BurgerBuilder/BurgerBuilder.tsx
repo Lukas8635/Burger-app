@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -8,53 +7,61 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandrel';
+import { RouteComponentProps } from 'react-router-dom';
+import { WriteStream } from 'tty';
 
-const INGREDIENT_PRICES : BurgerType = {
+
+
+ export interface AuxBurgerIngredienceInterface extends RouteComponentProps {
+    ingredients: {
+        salad: number;
+        bacon: number;
+        cheese: number;
+        meat: number;
+        [key: number]: string;
+      };
+      label?: string;
+      type?: string;
+      totalPrice: number;
+      purchasing: boolean;
+      loading: boolean;
+      error: boolean;
+    }
+    
+export interface BurgerBuilderState {
+    salad: number;
+    cheese: number;
+    meat: number;
+    bacon: number;
+    [key: string]: number;
+    
+}
+export interface BurgerType {
+    [key:string]:number;
+  
+}
+
+
+const INGREDIENT_PRICES : BurgerBuilderState = {
     salad:0.5,
     cheese:0.4,
     meat:1.3,
     bacon:0.7
 } 
 
-export interface BurgerType {
-    [key:string]:any;
-    
-    
-    
-}
-
-
- export interface AuxBurgerIngredienceInterface {
-    salad?:number;
-    bacon?: number;
-    cheese?:number;
-    meat?:number;
-    [x: string]:any;
-    
-    
-}
- 
-interface BurgerBuilderState {
-    ingredients:BurgerType;
-    totalPrice:number;
-    purchaseable?:boolean;
-    purchasing?:boolean;
-    loading: boolean;
-    error?  : false,
-    
-}
-
 class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
-    state: BurgerBuilderState = {
-        ingredients: {},
+    state = {
+        ingredients: {} as BurgerType,
         totalPrice: 4,
         purchaseable: false,
         purchasing: false,
         loading: false,
+        error:false,
         
 
     };
     componentDidMount(){
+        console.log(this.props);
         axios.get('https://burger-my-app-good.firebaseio.com/ingredients.json')
             .then(response =>{
                 this.setState({ingredients: response.data});
@@ -64,7 +71,7 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
             })
     }
 
-    updatePurchaseState (ingredients: { [x: string]: any; }){
+    updatePurchaseState (ingredients: { [x: string]: number; }){
           
         const sum = Object.keys(ingredients)
             .map(igKey =>{
@@ -76,7 +83,7 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
         this.setState({purchaseable: sum > 0})
     }
 
-    addIngredientHandler = (type:string) =>  {
+    addIngredientHandler = (type:keyof BurgerBuilderState) =>  {
         const oldCount = this.state.ingredients[type];
         const updatedCount = oldCount +1;
         const updatedIngredients = {
@@ -90,7 +97,7 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
         this.updatePurchaseState(updatedIngredients);
     }
 
-    removeIngredientHandler = (type:string) => {
+    removeIngredientHandler = (type:keyof BurgerBuilderState) => {
         const oldCount = this.state.ingredients[type];
         if (oldCount <= 0){
             return 
@@ -116,32 +123,21 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
 
     purchaseContinueHandler = ()=> {
         //alert ('You Continue!');
-        this.setState( { loading: true } ); 
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Max Schwarzmuller',
-                adress:{
-                    street: 'Teststreet1',
-                    zipCode: '41351',
-                    country: 'Germany'
-                },
-                email: 'Test@test.com'
-            },
-            deliveryMethod: 'fastest'
+    
+        const queryParams = [];
+        for (let i in this.state.ingredients){
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
         }
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({loading: false, purchasing: false})
-            })
-            .catch(error => {
-                this.setState({loading: false, purchasing: false});
-            })
+        queryParams.push('price=' +  this.state.totalPrice)
+        const queryString = queryParams.join('&')
+        this.props.history.push({
+            pathname: '/checkout',
+            search:'?' + queryString
+        });
 
     }
     render(){
-        const disabledInfo ={
+        const disabledInfo:{[key:string]: number|boolean} ={
             ...this.state.ingredients
             
         };
@@ -166,11 +162,12 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
                         ordered={this.purchaseHandler}
                         purchasable={this.state.purchaseable}/>
                 </Auxiliary>);
-             orderSummary = <OrderSummary 
+             orderSummary =  <OrderSummary 
                 ingredients={this.state.ingredients}
                 price={this.state.totalPrice}
                 purchaseCancelled={this.puschaseCancelHandler}
                 purchaseContinued={this.purchaseContinueHandler}/>;
+             
         }
         if (this.state.loading) {
             orderSummary = <Spinner />

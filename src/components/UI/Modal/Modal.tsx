@@ -1,27 +1,24 @@
 import React, { ReactNode, Component } from 'react';
-
 import classes from './Modal.module.css';
 import Auxiliary from '../../../hoc/Auxiliary/Auxiliary';
 import Backdrop from '../Backdrop/Backdrop';
 
 export interface ModalInterface {
-    
-    btnType?: any;
-    modalClosed?: (event: React.MouseEvent<HTMLElement>) => void;
-    clicked?: (event: React.MouseEvent<HTMLElement>) => void;
-    children?: ReactNode;
-    show?: boolean | undefined;
+    modalClosed: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    children: React.ReactNode;
+    show: boolean |string | undefined;
 }
 
 class Modal extends Component<ModalInterface>{
-    shouldComponentUpdate (nextProps: {children: boolean, show: boolean | undefined; }, nextState: any){
-            return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
-    }
-    
-    componentDidUpdate (){
-        console.log('[Modal] WillUpdate');
-        
-    }
+    shouldComponentUpdate(nextProps: {
+        show: boolean | undefined | string;
+        children: React.ReactNode;
+      }) {
+        return (
+          nextProps.show !== this.props.show ||
+          nextProps.children !== this.props.children
+        );
+      }
     render () {
         return (<Auxiliary>
             <Backdrop show={this.props.show}
