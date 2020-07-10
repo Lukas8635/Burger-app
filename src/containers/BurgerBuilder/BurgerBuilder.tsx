@@ -13,13 +13,7 @@ import { WriteStream } from 'tty';
 
 
  export interface AuxBurgerIngredienceInterface extends RouteComponentProps {
-    ingredients: {
-        salad: number;
-        bacon: number;
-        cheese: number;
-        meat: number;
-        [key: number]: string;
-      };
+    ingredients: BurgerType;
       label?: string;
       type?: string;
       totalPrice: number;
@@ -83,7 +77,7 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
         this.setState({purchaseable: sum > 0})
     }
 
-    addIngredientHandler = (type:keyof BurgerBuilderState) =>  {
+    addIngredientHandler = (type:keyof BurgerType) =>  {
         const oldCount = this.state.ingredients[type];
         const updatedCount = oldCount +1;
         const updatedIngredients = {
@@ -97,7 +91,7 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
         this.updatePurchaseState(updatedIngredients);
     }
 
-    removeIngredientHandler = (type:keyof BurgerBuilderState) => {
+    removeIngredientHandler = (type:keyof BurgerType) => {
         const oldCount = this.state.ingredients[type];
         if (oldCount <= 0){
             return 

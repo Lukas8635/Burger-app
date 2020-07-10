@@ -3,26 +3,24 @@ import Order from '../../components/Order/Order';
 import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandrel';
 import { BurgerBuilderState } from '../BurgerBuilder/BurgerBuilder'
-interface OrderStateInterface {
-    orders:[
-        {
-            price: number ;
-            ingredients: BurgerBuilderState;
-            id: number;
-        }
-    ];
-    loading: boolean;
-    
+
+interface OrderInterface {
+    price: string ;
+    ingredients: BurgerBuilderState;
+    id: number;
 }
 
+interface OrderStateInterface {
+    orders: OrderInterface[];
+    loading: boolean;
+}
 
-class Orders extends Component <OrderStateInterface>{
-    state={
-        orders:[],
+class Orders extends Component <null, OrderStateInterface>{
+    state = {
+        orders: [],
         loading: true,
-        
-
     }
+
     componentDidMount(){
         axios.get('/orders.json')
             .then(res =>{
@@ -44,11 +42,7 @@ class Orders extends Component <OrderStateInterface>{
         return(
             <div>
                 {this.state.orders.map(
-                    (order: {
-                        id: number;
-                        price: number;
-                        ingredients: BurgerBuilderState;
-          }) =>(
+                    (order: OrderInterface) =>(
                     <Order key={order.id}
                     price={order.price}
                     ingredients={order.ingredients}/> 
@@ -58,4 +52,4 @@ class Orders extends Component <OrderStateInterface>{
     }
 }
 
-export default withErrorHandler( Orders, axios) ;
+export default withErrorHandler( Orders, axios) ;  
