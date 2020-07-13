@@ -4,10 +4,11 @@ import classes from './Button.module.css';
 
 interface ButtonInterface {
     btnType: string;
-    clicked:
+    clicked?:
       | ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void)
       | undefined;
     children: React.ReactNode;
+    disabled?:boolean;
 }
 
 
@@ -15,6 +16,7 @@ interface ButtonInterface {
 
 const button = (props:ButtonInterface) => (
     <button
+        disabled={props.disabled}
         className={[classes.Button, classes[props.btnType]].join(' ')}
         onClick={props.clicked}>
         {props.children}

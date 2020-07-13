@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Aux from '../../../hoc/Auxiliary/Auxiliary';
-import {BurgerType} from '../../../containers/BurgerBuilder/BurgerBuilder';
+
 import Button from '../../UI/Button/Button';
 
 interface OrderSummaryInterface {
