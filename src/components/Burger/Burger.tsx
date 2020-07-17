@@ -3,19 +3,22 @@ import React from 'react';
 
 import classes from './Burger.module.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
-import {BurgerType} from '../../containers/BurgerBuilder/BurgerBuilder'
+import BurgerBuilder, {BurgerType} from '../../containers/BurgerBuilder/BurgerBuilder'
 
 export interface BurgerInterface {
     ingredients: BurgerType ;
     
 }
 
+
 const burger = (props:BurgerInterface) => {
-    console.log(props);
+    
     let transformIngredients = Object.keys(props.ingredients)
     .map(ingredientKey =>{
         return [...Array(props.ingredients[ingredientKey])].map((_, i) => {
+            console.log(props.ingredients[ingredientKey])
             return <BurgerIngredient key={ingredientKey + i} type={ingredientKey}/>;
+            
         });
     })
         .reduce((arr, el) => {

@@ -6,6 +6,7 @@ import { BurgerType } from '../../BurgerBuilder/BurgerBuilder';
 import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import { connect } from 'react-redux';
 
 
 interface ContactDataStateInterface {
@@ -21,8 +22,6 @@ interface DataElementInterface {
     validation:ValidationInterface;
     valid?:boolean;
     touched:boolean;
-    
-    
     }
 
 export interface ValidationInterface{
@@ -48,6 +47,7 @@ interface contactData extends RouteComponentProps{
     price: number;
     ingredients: BurgerType;
     name?:string;
+    totalPrice?:number;
     }
 
 interface OrderFormInterface{
@@ -58,13 +58,16 @@ interface OrderFormInterface{
     email:DataElementInterface;
     deliveryMethod:DataElementInterface;
     }
+interface ContactDataMapStateInterface{
+    ingredients: string;
+    totalPrice: number;
+}
 
 
 class ContactData extends Component <contactData, ContactDataStateInterface> {
     state = {
         orderForm:{
                 name: {
-                   
                     elementtype: 'input',
                     elementConfig:{
                         type: 'text',
@@ -242,7 +245,7 @@ class ContactData extends Component <contactData, ContactDataStateInterface> {
 
           type NewKey = keyof typeof newElementArrayState;
             let key :NewKey
-        for(let key in this.state.orderForm){
+        for(key in this.state.orderForm){
             formElementsArray.push({
                 id:key,
                 config:this.state.orderForm[key as keyof OrderFormInterface]
@@ -280,4 +283,11 @@ class ContactData extends Component <contactData, ContactDataStateInterface> {
     
 }
 
-export default ContactData;
+const mapStateToProps = (state:ContactDataMapStateInterface) =>{
+    return{
+        ings: state.ingredients,
+        price: state.totalPrice
+    }
+}
+
+export default connect (mapStateToProps)  (ContactData);

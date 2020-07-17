@@ -5,36 +5,24 @@ import { BurgerType } from '../../BurgerBuilder/BurgerBuilder';
 import ContactData from './ContactData';
 import axios from '../../../axios-orders';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandrel';
+import { connect } from 'react-redux';
 
 interface CheckoutInterface extends RouteComponentProps {
     salad: number;
     bacon: number;
     cheese: number;
     meat: number;
-    ingredients: BurgerType
+    ings:BurgerType;
+    totalPrice:number;
+}
+
+interface CheckoutStateInterface{
+    totalPrice:number;
+    ingredients:string;
 }
 
 class Checkout extends Component <CheckoutInterface> {
-    state={
-        ingredients:{} as BurgerType,
-        price: 0,
-        totalPrice:0,
-    };
-    componentWillMount(){
-        const query = new URLSearchParams(this.props.location.search);
-        const ingredients = {} as BurgerType;
-        let price: number | string = 0;
-        for (let param of query.entries()){
-            //['salad', '1']
-            if(param[0] === 'price'){
-                price = param[1];
-            } else {
-                ingredients[param[0]]= +param[1];
-            }
-            
-        }
-        this.setState( { ingredients: ingredients, totalPrice:price     })
-    }
+  
     checkoutCancelledHandler= () => {
         this.props.history.goBack();
     }
@@ -45,23 +33,23 @@ class Checkout extends Component <CheckoutInterface> {
         return (
             <div>
                 <CheckoutSummary
-                    ingredients={this.state.ingredients}
+                    ingredients={this.props.ings}
                     checkoutCancelled={this.checkoutCancelledHandler}
                     checkoutContinued={this.checkoutContinuedHandler}
                 />
                 <Route
                     path={this.props.match.path + '/contact-data'}
-                    render={(props) => (
-                    <ContactData
-                    ingredients={this.state.ingredients}
-                    price={this.state.totalPrice}
-                    {...props}
-                    />
-                )}
+                    component={ContactData}
                 />
             </div>
         );
       }
     }
+const mapStateToProps = (state:CheckoutStateInterface ) =>{
+    return{
+        ings: state.ingredients,
+        price: state.totalPrice,
+    }
+}
 
-export default withErrorHandler( Checkout , axios) ;
+export default  connect (mapStateToProps) (withErrorHandler( Checkout , axios)) ;

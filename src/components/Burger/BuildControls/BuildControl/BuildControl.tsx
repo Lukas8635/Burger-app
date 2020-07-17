@@ -4,7 +4,7 @@ import classes from './BuildControl.module.css';
 
 export interface BuildControlInterface {
     //grazina objekta
-    added: (event: React.MouseEvent<HTMLButtonElement>) => {};
+    added: (event: React.MouseEvent<HTMLButtonElement>) => void;
   removed: (event: React.MouseEvent<HTMLButtonElement>) => {};
   disabled?: boolean | number;
   purchasable?: boolean;
