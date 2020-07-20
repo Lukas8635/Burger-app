@@ -1,5 +1,5 @@
-import * as actionTypes from './action';
-import { BurgerType, BurgerBuilderState} from '../containers/BurgerBuilder/BurgerBuilder';
+import * as actionTypes from '../actions/actionTypes';
+import { BurgerType, BurgerBuilderState} from '../../containers/BurgerBuilder/BurgerBuilder';
 
 const initialState = {
     ingredients: {
@@ -40,6 +40,23 @@ const reducer = (state = initialState, action:any) =>{
                 },
                 totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
 
+            };
+        case actionTypes.SET_INGREDIENTS:
+            return {
+                ...state,
+                ingredients:{
+                    salad: action.ingredients.salad,
+                    bacon: action.ingredients.bacon,
+                    cheese: action.ingredients.cheese,
+                    meat: action.ingredients.meat,
+                },
+                error:false,
+                totalPrice: 4
+            };
+        case actionTypes.FETCH_INGREDIENTS_FAILED:
+            return {
+                ...state,
+                error: true
             };
         default:
             return state;

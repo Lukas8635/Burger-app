@@ -3,7 +3,7 @@ import React from 'react';
 
 import classes from './Burger.module.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
-import BurgerBuilder, {BurgerType} from '../../containers/BurgerBuilder/BurgerBuilder'
+import {BurgerType} from '../../containers/BurgerBuilder/BurgerBuilder'
 
 export interface BurgerInterface {
     ingredients: BurgerType ;
