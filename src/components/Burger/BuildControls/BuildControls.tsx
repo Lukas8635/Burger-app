@@ -6,8 +6,10 @@ import BuildControl from './BuildControl/BuildControl';
 
 interface BuildControlsInterface{
     ordered: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    //argumentai kurie ateina i funkcija
     ingredientAdded: Function;
     ingredientRemoved: Function;
+    //
     disabled: { [key: string]: number | boolean }
     price: number; 
     purchasable: boolean;
@@ -40,7 +42,7 @@ const buildControls = (props:BuildControlsInterface) => (
         ))}
         <button 
             className={classes.OrderButton}
-            disabled={!props.purchasable}
+            // disabled={!props.purchasable}
             onClick={props.ordered}>ORDER NOW</button>
     </div>
 );

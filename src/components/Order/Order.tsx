@@ -3,22 +3,27 @@ import classes from './Order.module.css'
 import { BurgerBuilderState } from '../../containers/BurgerBuilder/BurgerBuilder';
 
 interface OrderInterface {
+    key: number;
     price:string;
     ingredients:BurgerBuilderState;
 }
 
 
 const order = (props:OrderInterface)=> {
+    //sioje vietoje is objecto pasidaro array
     const ingredients = [];
+    console.log(props.ingredients);
 
     for (let ingredientName in props.ingredients){
         ingredients.push(
             {
                 name:ingredientName, 
-                amount: props.ingredients[ingredientName]
+                amount: props.ingredients[ingredientName],
             }
-        );
-    }
+            );
+
+        }
+        console.log(ingredients);
     const ingredientOutput = ingredients.map(ig => {
     return <span 
         style={{
@@ -30,6 +35,8 @@ const order = (props:OrderInterface)=> {
             }}
         key={ig.name}>{ig.name} ({ig.amount})</span>;
     });
+
+    console.log(ingredientOutput);
     return(
         <div className={classes.Order}>
             <p>Ingredients: {ingredientOutput}</p>

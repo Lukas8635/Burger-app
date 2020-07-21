@@ -1,29 +1,38 @@
-import * as actionTypes from './actionTypes';
+import {
+    ActionTypes,
+    ADD_INGREDIENT,
+    REMOVE_INGREDIENT,
+    SET_INGREDIENTS,
+    FETCH_INGREDIENTS_FAILED,
+} from '../actions/actionTypes'
 import axios from '../../axios-orders';
+import {  ThunkAction } from 'redux-thunk';
+import { Action } from 'redux';
+
 
 
 
 export const addIngredients = (name:string) => {
     return {
-        type: actionTypes.ADD_INGREDIENT,
+        type:ADD_INGREDIENT,
         ingredientName: name
     };
 };
 export const removeIngredients = (name:string) => {
     return {
-        type: actionTypes.REMOVE_INGREDIENT,
+        type:REMOVE_INGREDIENT,
         ingredientName: name
     };
 };
 
 export const fetchIngredientsFailed = () => {
     return {
-        type: actionTypes.FETCH_INGREDIENTS_FAILED
+        type: FETCH_INGREDIENTS_FAILED
     };
 };
 
-export const initIngredients = () => {
-    return (dispatch: Function) => {
+export const initIngredients = () : ThunkAction <void, undefined, undefined, Action> => {
+    return (dispatch) => {
         axios.get('https://burger-my-app-good.firebaseio.com/ingredients.json')
         .then(response =>{
             dispatch(setIngredients(response.data));
@@ -34,9 +43,9 @@ export const initIngredients = () => {
     };
 };
 
-export const setIngredients = (ingredients:string ) =>{
+export const setIngredients = (ingredients:ActionTypes ) =>{
     return {
-        type: actionTypes.SET_INGREDIENTS,
+        type: SET_INGREDIENTS,
         ingredients: ingredients
     };
 };

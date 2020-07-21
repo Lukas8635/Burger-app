@@ -9,6 +9,7 @@ import Input from '../../../components/UI/Input/Input';
 import { connect } from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandrel';
 import * as actions from '../../../store/actions/index';
+import { BurgerBuilderReducerInterface } from '../../../store/reducers/burgerBuilder';
 
 
 interface ContactDataStateInterface {
@@ -202,7 +203,7 @@ class ContactData extends Component <contactData, ContactDataStateInterface> {
 
     }
 
-    inputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>, inputIdentifier: any) => {
+    inputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>, inputIdentifier: string) => {
         const updatedOrderForm = {
             ...this.state.orderForm
         }
@@ -284,11 +285,11 @@ class ContactData extends Component <contactData, ContactDataStateInterface> {
     
 }
 
-const mapStateToProps = (state:ContactDataMapStateInterface) =>{
+const mapStateToProps = (state:BurgerBuilderReducerInterface) =>{
     return{
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        loading:state.orders.loading
+        loading:state.order.loading
     }
 }
 

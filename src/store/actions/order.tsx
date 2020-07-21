@@ -1,11 +1,28 @@
-import * as actionTypes from './actionTypes';
-import axios from '../../axios-orders';
-import { test } from './actionTypes';
-import { Dispatch } from 'redux';
+import {
+    PURCHASE_BURGER_START,
+    PURCHASE_BURGER_SUCCESS,
+    PURCHASE_BURGER_FAIL,
+    PURCHASE_INIT,
+    FETCH_ORDERS_START,
+    FETCH_ORDERS_SUCCESS,
+    FETCH_ORDERS_FAIL,
+} from '../actions/actionTypes'
 
-export const purchasaBurgerSuccess = (id:number, orderData:string) =>{
+import axios from '../../axios-orders';
+
+import { Dispatch } from 'redux';
+import { BurgerBuilderState } from '../../containers/BurgerBuilder/BurgerBuilder';
+
+
+interface OrderActionInterface {
+    price: number;
+    ingredients: BurgerBuilderState;
+    id: number;
+}
+
+export const purchasaBurgerSuccess = (id:string, orderData:string) =>{
     return{
-        type: actionTypes.PURCHASE_BURGER_SUCCESS,
+        type:PURCHASE_BURGER_SUCCESS,
         orderId: id,
         orderData: orderData,
     };
@@ -13,14 +30,14 @@ export const purchasaBurgerSuccess = (id:number, orderData:string) =>{
 
 export const purchaseBurgerFail = (error:string) => {
     return{
-        type: actionTypes.PURCHASE_BURGER_FAIL,
+        type: PURCHASE_BURGER_FAIL,
         error:error
     }
 }
 
 export const purchaseBurgerStart = () =>{
     return {
-        type:actionTypes.PURCHASE_BURGER_START
+        type:PURCHASE_BURGER_START
     };
 };
 
@@ -28,7 +45,7 @@ export const purchaseBurger = (orderData:string) => {
     return (dispatch:Dispatch )=>{
         dispatch(purchaseBurgerStart());
         axios.post('/orders.json', orderData)
-        .then( (response: { data: number; })=> {
+        .then( (response)=> {
             console.log(response.data)
            dispatch(purchasaBurgerSuccess(response.data.name, orderData))
         })
@@ -40,32 +57,33 @@ export const purchaseBurger = (orderData:string) => {
 
 export const purchaseInit = () => {
     return {
-        type:actionTypes.PURCHASE_INIT
+        type:PURCHASE_INIT
     };
 }
 
-export const fetchOrdersSuccess = (orders) =>{
+export const fetchOrdersSuccess = (orders:OrderActionInterface[]) =>{
     return{
-        type:actionTypes.FETCH_ORDER_SUCCESS,
+        type:FETCH_ORDERS_SUCCESS,
         orders: orders
     }
 };
 
-export const fetchOrdersFail = (error) =>{
+export const fetchOrdersFail = (error:string) =>{
     return{
-        type:actionTypes.FETCH_ORDER_FAIL ,
+        type:FETCH_ORDERS_FAIL ,
         error:error
     };
 };
 
 export const fetchOrderStart = () => {
     return {
-        type: actionTypes.FETCH_ORDERS_START
+        type: FETCH_ORDERS_START
     }
 }
 
-export const fetchOrders = () => {
+export const fetchOrders:Function = () => {
     return (dispatch:Dispatch) => {
+        dispatch(fetchOrderStart());
         axios.get('/orders.json')
             .then(res =>{
                 const fetchOrders = [];
@@ -75,11 +93,11 @@ export const fetchOrders = () => {
                         id: key
                     });
                 }
-                dispatch(fetchOrdersSuccess(fetchOrders))
-                this.setState({loading:false, orders: fetchOrders});
+                dispatch(fetchOrdersSuccess(fetchOrders));
+                
             })
             .catch(err =>{
-                this.setState({loading:false});
+                dispatch(fetchOrdersFail(err))
             })
     }
 }

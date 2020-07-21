@@ -1,55 +1,78 @@
-import React, { Component } from "react";
+import React, { Component, Dispatch } from "react";
 import Order from '../../components/Order/Order';
 import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandrel';
 import { BurgerBuilderState } from '../BurgerBuilder/BurgerBuilder'
+import * as actions from '../../store/actions/index';
+import { connect } from 'react-redux';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import { BurgerBuilderReducerInterface } from '../../store/reducers/burgerBuilder';
 
-interface OrderInterface {
-    price: string ;
-    ingredients: BurgerBuilderState;
-    id: number;
-}
 
-interface OrderStateInterface {
-    orders: OrderInterface[];
+export interface OrdersInterface {
+    orders: [
+        {
+            price:string;
+            ingredients:BurgerBuilderState;
+            id:number;
+        }
+    ];
     loading: boolean;
+    onFetchOrders:() => void;
 }
 
-class Orders extends Component <null, OrderStateInterface>{
-    state = {
-        orders: [],
-        loading: true,
-    }
+
+// interface OrderInterface {
+//     price: string ;
+//     ingredients: BurgerBuilderState;
+//     id: number;
+// }
+
+// interface OrderInterface{
+//     loading: boolean;
+//     orders:OrderInterface[];
+//     onFetchOrders:Function;
+// }
+
+class Orders extends Component<OrdersInterface>{
+
+
 
     componentDidMount(){
-        axios.get('/orders.json')
-            .then(res =>{
-                const fetchOrders = [];
-                for (let key in res.data){
-                    fetchOrders.push({
-                        ...res.data[key],
-                        id: key
-                    });
-                }
-                this.setState({loading:false, orders: fetchOrders});
-            })
-            .catch(err =>{
-                this.setState({loading:false});
-            })
-
+        this.props.onFetchOrders();
     }
+    
     render (){
+    let orders = [<Spinner />];
+        if (!this.props.loading){
+            orders=
+                this.props.orders.map<JSX.Element>(
+                (order) =>(
+                <Order key={order.id}
+                price={order.price}
+                ingredients={order.ingredients}/> 
+            ) )
+            
+        }
         return(
             <div>
-                {this.state.orders.map(
-                    (order: OrderInterface) =>(
-                    <Order key={order.id}
-                    price={order.price}
-                    ingredients={order.ingredients}/> 
-                ))}
+               {orders}
             </div>
         );
     }
 }
 
-export default withErrorHandler( Orders, axios) ;  
+const mapStateToProps = (state: BurgerBuilderReducerInterface) => {
+    return{
+        orders: state.order.orders,
+        loading: state.order.loading
+    }
+} 
+
+const mapDispatchToProps = (dispatch:Dispatch<any>) => {
+    return {
+        onFetchOrders: () => dispatch(actions.fetchOrders())
+    };
+}
+
+export default connect (mapStateToProps, mapDispatchToProps) (withErrorHandler( Orders, axios)) ;  

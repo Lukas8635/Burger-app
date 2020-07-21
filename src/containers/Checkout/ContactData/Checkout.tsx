@@ -3,27 +3,22 @@ import { Route, RouteComponentProps, Redirect } from 'react-router-dom'
 import CheckoutSummary from '../../../components/Order/CheckoutSummary/CheckoutSummary';
 import { BurgerType } from '../../BurgerBuilder/BurgerBuilder';
 import ContactData from './ContactData';
-import axios from '../../../axios-orders';
-import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandrel';
 import { connect } from 'react-redux';
-import { Dispatch } from "redux";
-import * as actions from '../../../store/actions/index';
+import { BurgerBuilderReducerInterface } from '../../../store/reducers/burgerBuilder'
 
-interface CheckoutInterface extends RouteComponentProps {
-    ings:BurgerType;
-    totalPrice:number;
-    onInitPurchase(): Function;
- 
+
+interface CheckoutStateInterface extends RouteComponentProps{
+    salad:number;
+    bacon:number;
+    cheese:number;
+    meat:number;
+    ings:BurgerType
+    onInitPurchase(): ()=> void;
+    purchased:boolean;
+   
 }
 
-interface CheckoutStateInterface{
-    order: any;
-    burgerBuilder: any;
-    totalPrice:number;
-    ingredients:string;
-}
-
-class Checkout extends Component <CheckoutInterface> {
+class Checkout extends Component <CheckoutStateInterface> {
 
   
     checkoutCancelledHandler= () => {
@@ -35,7 +30,7 @@ class Checkout extends Component <CheckoutInterface> {
     render() {
         let summary = <Redirect to="/"/>
         if (this.props.ings){
-            const purchasedRedirect = this.props. purchased ?<Redirect to = "/" /> : null
+            const purchasedRedirect = this.props.purchased ?<Redirect to = "/" /> : null
             summary = (
 
                 <div>
@@ -53,7 +48,7 @@ class Checkout extends Component <CheckoutInterface> {
         return summary
       }
     }
-const mapStateToProps = (state:CheckoutStateInterface ) =>{
+const mapStateToProps = (state:BurgerBuilderReducerInterface ) =>{
     return{
         ings: state.burgerBuilder.ingredients,
         purchased:state.order.purchased

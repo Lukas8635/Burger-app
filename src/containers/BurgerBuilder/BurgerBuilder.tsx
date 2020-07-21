@@ -10,8 +10,7 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandrel';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux'; 
 import * as actions from '../../store/actions/index';
-
-
+import { BurgerBuilderReducerInterface } from '../../store/reducers/burgerBuilder';
 
 export interface AuxBurgerIngredienceInterface extends RouteComponentProps {
     label?: string;
@@ -21,11 +20,11 @@ export interface AuxBurgerIngredienceInterface extends RouteComponentProps {
     loading?: boolean;
     error?: boolean;
     ings:BurgerType;
-    onIngredientAdded:Function ;
-    onIngredientRemoved: Function;
-    onInitIngredients: Function;
+    onIngredientAdded: () => void ;
+    onIngredientRemoved:  () => void;
+    onInitIngredients: () => void;
     price:number;
-    onInitPurchase:Function
+    onInitPurchase: () => void
     }
     
 export interface BurgerBuilderState {
@@ -34,7 +33,7 @@ export interface BurgerBuilderState {
     meat: number;
     bacon: number;
     [key: string]: number;
-    price:number;
+   
     
     
 }
@@ -50,7 +49,7 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
     };
 
     componentDidMount(){
-       console.log(this.props)
+       
        this.props.onInitIngredients()
       
     }
@@ -125,7 +124,7 @@ class BurgerBuilder extends Component <AuxBurgerIngredienceInterface>{
     }
  }
 }
- const mapStateToProps = (state:BurgerBuilderState) => {
+ const mapStateToProps = (state:BurgerBuilderReducerInterface) => {
      return{
          ings: state.burgerBuilder.ingredients,
          price: state.burgerBuilder.totalPrice,
