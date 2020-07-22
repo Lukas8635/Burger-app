@@ -53,6 +53,7 @@ interface contactData extends RouteComponentProps{
     totalPrice?:number;
     onOrderBurger:Function;
     loading: boolean;
+    ings: BurgerType
     }
 
 interface OrderFormInterface{
@@ -63,12 +64,7 @@ interface OrderFormInterface{
     email:DataElementInterface;
     deliveryMethod:DataElementInterface;
     }
-interface  ContactDataMapStateInterface{
-    
-    ingredients: string;
-    totalPrice: number;
-    loading: boolean;
-}
+
 
 
 class ContactData extends Component <contactData, ContactDataStateInterface> {
@@ -179,7 +175,7 @@ class ContactData extends Component <contactData, ContactDataStateInterface> {
             formData[key] = this.state.orderForm[key].value;
           }
         const order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.ings,
             price: this.props.price,
             orderData: formData,
         }   
