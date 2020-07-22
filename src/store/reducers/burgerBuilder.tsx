@@ -31,7 +31,7 @@ export interface BurgerBuilderReducerInterface {
 interface BurgerBuilderReducerStateInterface {
     ingredients: ReducerIngredientsInterface;
     totalPrice: number;
-    updatePurschaseState: any;
+    updatePurschaseState:boolean;
     error?: boolean;
 }
 

@@ -7,6 +7,7 @@ import * as actions from '../../store/actions/index';
 import { connect } from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import { BurgerBuilderReducerInterface } from '../../store/reducers/burgerBuilder';
+import { ThunkDispatch } from "redux-thunk";
 
 
 export interface OrdersInterface {
@@ -69,10 +70,14 @@ const mapStateToProps = (state: BurgerBuilderReducerInterface) => {
     }
 } 
 
-const mapDispatchToProps = (dispatch:Dispatch<any>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch <void, undefined, any>) => {
     return {
-        onFetchOrders: () => dispatch(actions.fetchOrders())
+      onFetchOrders: () => dispatch(actions.fetchOrders()),
     };
-}
-
-export default connect (mapStateToProps, mapDispatchToProps) (withErrorHandler( Orders, axios)) ;  
+  };
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withErrorHandler(Orders, axios));
+  
